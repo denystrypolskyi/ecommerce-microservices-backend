@@ -1,4 +1,4 @@
-# Distributed Back-end System
+# E-commerce Microservices
 
 This is a pet microservices project that simulates a simple e-commerce platform.
 It allows users to register, create and manage products, place orders, and automatically receive email notifications with order details such as total cost and purchased items.
