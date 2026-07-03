@@ -1,7 +1,8 @@
-# E-commerce Microservices
+# E-commerce Microservices Backend
 
-This is a pet microservices project that simulates a simple e-commerce platform.
-It allows users to register, create and manage products, place orders, and automatically receive email notifications with order details such as total cost and purchased items.
+A Spring Boot microservices backend that simulates an e-commerce order processing system.
+
+The system allows users to register, manage products, place orders, and receive email notifications with order details such as purchased items and total cost.
 
 
 ## 🚀 Features
