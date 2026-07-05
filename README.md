@@ -1,39 +1,70 @@
-# E-commerce Microservices Backend
+# Distributed Backend System
 
-A Spring Boot microservices backend that simulates an e-commerce order processing system.
+A Java/Spring Boot microservices demo for an e-commerce flow. The project shows REST communication, JWT authentication, PostgreSQL persistence, RabbitMQ notifications, Docker-based local infrastructure, validation, centralized exception handling, and automated tests.
 
-The system allows users to register, manage products, place orders, and receive email notifications with order details such as purchased items and total cost.
+## Tech Stack
 
+- Java 21, Spring Boot
+- Spring Web, Spring Security, Spring Data JPA, Bean Validation
+- PostgreSQL with Flyway migrations
+- RabbitMQ for order notification events
+- Docker Compose
+- JUnit, Mockito, MockMvc, H2 test database
 
-## 🚀 Features
+## Services
 
-- Multiple independent microservices with separate PostgreSQL databases  
-- Inter-service communication using REST API  
-- Asynchronous event-based communication with RabbitMQ (Order → Notification)  
-- Centralized logging with Kafka and a dedicated `log-consumer` service  
-- JWT-based user authentication  
-- Unit and integration testing with JUnit and Mockito  
-- Dockerized setup for easy local development
+| Service | Port | Responsibility |
+| --- | ---: | --- |
+| `auth-service` | 8083 | User registration, login, JWT/refresh token generation |
+| `product-service` | 8082 | Product catalog and stock updates |
+| `order-service` | 8084 | Order creation, stock reservation, RabbitMQ notifications |
+| `notification-service` | 8081 | Consumes order notification messages and sends email |
 
+## Architecture Notes
 
-## 🧩 Microservices Overview
+- API errors are normalized through `@RestControllerAdvice`.
+- Protected endpoints use JWT validation through Spring Security filters.
+- API controllers return DTOs instead of exposing JPA entities directly.
+- Product stock decrement is transactional and uses optimistic locking.
+- RabbitMQ notification failures are rejected to a dead-letter queue.
+- Database schema is managed with Flyway migrations.
+- Tests run without local Docker infrastructure by using H2 and disabled broker listeners.
 
-| Service | Description | Communication | Repository |
-|----------|--------------|----------------|-------------|
-| **Auth Service** | Authentication and authorization (user registration, login, JWT). | REST API | [auth-service](https://github.com/denystrypolskyi/auth-service) |
-| **Product Service** | Product management (create, update, list products). | REST API | [product-service](https://github.com/denystrypolskyi/product-service) |
-| **Order Service** | Order creation and management. Sends events to RabbitMQ and logs to Kafka. | REST API + RabbitMQ + Kafka | [order-service](https://github.com/denystrypolskyi/order-service) |
-| **Notification Service** | Listens to RabbitMQ messages and sends order confirmation emails. | RabbitMQ | [notification-service](https://github.com/denystrypolskyi/notification-service) |
-| **Log Consumer Service** | Consumes Kafka topics for centralized logging. | Kafka | [log-consumer-service](https://github.com/denystrypolskyi/log-consumer-service) |
+## Local Setup
 
+Create a `.env` file from `.env.example` and set mail credentials if you want notification emails to be sent.
 
-## 📦 Tech Stack
+```env
+MAIL_USERNAME=your@email.com
+MAIL_PASSWORD=your-mail-app-password
+POSTGRES_PASSWORD=mysecurepass123
+JWT_SECRET=replace-with-at-least-32-byte-secret
+RABBITMQ_USERNAME=guest
+RABBITMQ_PASSWORD=guest
+```
 
-- Java
-- Spring Boot
-- Docker
-- PostgreSQL
-- Kafka
-- RabbitMQ
-- REST API
-- JUnit + Mockito
+Start the full stack:
+
+```powershell
+docker compose up --build
+```
+
+RabbitMQ management UI is available at `http://localhost:15672`.
+
+## Main API Flow
+
+1. Register: `POST http://localhost:8083/auth/register`
+2. Login: `POST http://localhost:8083/auth/login`
+3. Use the returned access token as `Authorization: Bearer <token>`
+4. Create products through `product-service`
+5. Create orders through `order-service`
+6. Order creation decrements product stock and sends a RabbitMQ notification
+
+## Run Tests
+
+```powershell
+cd auth-service; .\mvnw.cmd test
+cd ..\product-service; .\mvnw.cmd test
+cd ..\order-service; .\mvnw.cmd test
+cd ..\notification-service; .\mvnw.cmd test
+```
