@@ -13,12 +13,12 @@ A Java/Spring Boot microservices demo for an e-commerce flow. The project shows 
 
 ## Services
 
-| Service | Port | Responsibility |
-| --- | ---: | --- |
-| `auth-service` | 8083 | User registration, login, JWT/refresh token generation |
-| `product-service` | 8082 | Product catalog and stock updates |
-| `order-service` | 8084 | Order creation, stock reservation, RabbitMQ notifications |
-| `notification-service` | 8081 | Consumes order notification messages and sends email |
+| Service | Port | Responsibility | Repository |
+| --- | ---: | --- | --- |
+| `auth-service` | 8083 | User registration, login, JWT/refresh token generation | https://github.com/denystrypolskyi/auth-service |
+| `product-service` | 8082 | Product catalog and stock updates | https://github.com/denystrypolskyi/product-service |
+| `order-service` | 8084 | Order creation, stock reservation, RabbitMQ notifications | https://github.com/denystrypolskyi/order-service |
+| `notification-service` | 8081 | Consumes order notification messages and sends email | https://github.com/denystrypolskyi/notification-service |
 
 ## Architecture Notes
 
