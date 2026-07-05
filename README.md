@@ -1,6 +1,6 @@
 # E-commerce Microservices Backend
 
-A Java/Spring Boot microservices demo for an e-commerce flow. The project shows REST communication, JWT authentication, PostgreSQL persistence, RabbitMQ notifications, Docker-based local infrastructure, validation, centralized exception handling, and automated tests.
+A Java/Spring Boot microservices demo for an e-commerce flow. The project shows REST communication, JWT authentication, PostgreSQL persistence, RabbitMQ notifications, Docker-based local infrastructure, database migrations, and automated tests.
 
 ## Tech Stack
 
@@ -22,13 +22,13 @@ A Java/Spring Boot microservices demo for an e-commerce flow. The project shows 
 
 ## Architecture Notes
 
-- API errors are normalized through `@RestControllerAdvice`.
-- Protected endpoints use JWT validation through Spring Security filters.
-- API controllers return DTOs instead of exposing JPA entities directly.
-- Product stock decrement is transactional and uses optimistic locking.
-- RabbitMQ notification failures are rejected to a dead-letter queue.
-- Database schema is managed with Flyway migrations.
-- Tests run without local Docker infrastructure by using H2 and disabled broker listeners.
+- Services use separate PostgreSQL databases.
+- Authentication uses JWT access and refresh tokens.
+- Order creation reserves product stock before persisting the order.
+- Product stock uses optimistic locking to guard concurrent order creation.
+- RabbitMQ handles asynchronous order notification delivery.
+- Failed notification messages are routed to a dead-letter queue.
+- Flyway manages database schema changes.
 
 ## Local Setup
 
