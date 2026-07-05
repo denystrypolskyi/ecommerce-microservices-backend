@@ -1,4 +1,4 @@
-# Distributed Backend System
+# E-commerce Microservices Backend
 
 A Java/Spring Boot microservices demo for an e-commerce flow. The project shows REST communication, JWT authentication, PostgreSQL persistence, RabbitMQ notifications, Docker-based local infrastructure, validation, centralized exception handling, and automated tests.
 
